@@ -36,12 +36,12 @@ everyOther([1,4,7,2,5]) # => [1,7,5]
 ```
 
 Given a collection of integers
-Iterate through each element in the collection
 
 - create a new empty array
-- if the index position of the value is even, save value in a new array
-- else skip to next iteration
-  print the result
+- Iterate through each element in the collection
+  - if the index position of the value is even, save value in a new array
+  - else skip to next iteration
+    print the result
 
 START
 Given an array of integers
@@ -62,16 +62,17 @@ PRINT result
 
 Given a string
 
-- Set a count variable to keep track of the position in the string
-- Traverse the string character by character.
-- Check for each character if it matches with the given character.
-- Increment the count by 1, if it matches with the given character.
-- when count becomes 3 return the count variable - index position of the character in string
+- Set a count variable to keep track of the number of times a character occurs in a string
+- Traverse the string character by character
+- Iterator variable to keep track of the index of the character currently on
+- Check for each character if it matches with the given character if so increment the count by 1
+- when count becomes 3 return the iterator variable
 
 START
 SET count = 0
 SET iterator = 0
 convert the string to an array to iterate over
+
 WHILE iteration < length of the string
 
 - SET current_character = value of the current iteration
@@ -82,9 +83,8 @@ WHILE iteration < length of the string
 
   - break out of loop, return iterator value
 
-- IF count < 3 return nil
-
-- retrieve iterator - refers to index position of character
+- Outside of Loop IF count < 3
+  - return nil
 
 PRINT returned index value
 

@@ -25,5 +25,3 @@ end
 puts find_index(word, 'x')
 p find_index(word, 'a')
 
-
-
