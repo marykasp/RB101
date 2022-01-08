@@ -4,12 +4,15 @@
 - add the two integers together and return the value
 
 START
-SET number1 = integer value or GET number from a user
-SET number2 = integer value or GET number from a user
+
+- SET number1 = integer value or GET number from a user
+- SET number2 = integer value or GET number from a user
 
 Add numbers together inside method, return value
-SET result = return value of method call
-READ value of result, PRINT result
+
+- SET result = return value of method call
+
+PRINT result
 
 ### a method that takes an array of strings, and returns a string that is all those strings concatenated together
 
@@ -19,11 +22,13 @@ READ value of result, PRINT result
 - return the result from the method
 
 START
-SET result = empty string
-SET iterator = 1
+
+- SET result = empty string
+- SET iterator = 1
 
 WHILE iterator <= length of the string array
-Concatenate current_string to result variable
+
+- Concatenate current_string to result variable
 
 PRINT result
 
