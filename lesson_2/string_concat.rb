@@ -26,8 +26,9 @@ def string_concat(arr_string)
     result += "#{word} "
   end
 
-  return result
+  # removes whitespace from both ends of a string - modifies original
+  return result.strip!
 end
 
 p string_concatenation(words)
-p string_concat(words) # leaves a space at end of sentence
+p string_concat(words)
