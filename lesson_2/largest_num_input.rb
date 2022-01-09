@@ -28,14 +28,17 @@ def largest_num(numbers)
   return saved_number
 end
 
+largest_numbers = []
 loop do
   prompt("Please enter a collection of numbers (ex. 1 2 3 4)")
   collection = gets().chomp()
 
   # convert the string to an array of nummbers, reassing collection to that return value
   collection = convert_num_array(collection)
-  result = largest_num(collection)
-  puts "The largest number of #{collection} collection is #{result}"
+  # get the largest number
+  num = largest_num(collection)
+  largest_numbers.push(num)
+  puts "The largest number of #{collection} collection is #{num}"
 
   prompt("Would you like to enter another collection? (y to continue)")
   answer = gets().chomp()
@@ -43,6 +46,6 @@ loop do
 end
 
 
-
+puts "The largest number from each collection: #{largest_numbers}"
 
 
