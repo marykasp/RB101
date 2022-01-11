@@ -40,7 +40,7 @@ def get_name
     prompt("Please enter a valid name.")
   end
 
-  prompt("Hello #{name.strip()}!")
+  return name
 end
 
 def get_loan_amount
@@ -103,7 +103,8 @@ end
 
 # ------ WELCOME ------
 prompt(messages('welcome'))
-get_name()
+name = get_name()
+prompt("Hello #{name.strip()}!")
 
 # ------ MAIN PROGRAM ------
 loop do
@@ -123,5 +124,5 @@ loop do
 end
 
 # ------ CLOSING MESSAGE ------
-prompt(messages('closing_message'))
+prompt("#{messages('closing_message')} #{name}!")
 prompt("Goodbye!")
