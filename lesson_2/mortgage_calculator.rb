@@ -26,7 +26,7 @@ def get_apr(interest)
   interest.to_f / 100
 end
 
-def payment(amount, monthly_interest, months)
+def calculate_payment(amount, monthly_interest, months)
   amount.to_f * (monthly_interest / (1 - (1 + monthly_interest)**(-months)))
 end
 
@@ -40,7 +40,7 @@ def get_name
     prompt("Please enter a valid name.")
   end
 
-  return name
+  return name.strip()
 end
 
 def get_loan_amount
@@ -89,9 +89,9 @@ def get_interest_rate
 end
 
 def display_payment(amount, monthly_interest, months)
-  monthly_payment = payment(amount, monthly_interest, months)
+  monthly_payment = calculate_payment(amount, monthly_interest, months)
   if monthly_interest == 0
-    prompt("Your monthly payment is $#{format('%.2f', (amount.to_f / months))}")
+    prompt("With 0% interest, your monthly payment is $#{format('%.2f', (amount.to_f / months))}")
   else
     prompt("Your monthly payment is $#{format('%.2f', monthly_payment)}")
   end
@@ -104,7 +104,7 @@ end
 # ------ WELCOME ------
 prompt(messages('welcome'))
 name = get_name()
-prompt("Hello #{name.strip()}!")
+prompt("Hello #{name}!")
 
 # ------ MAIN PROGRAM ------
 loop do
@@ -120,7 +120,12 @@ loop do
 
   prompt(messages('again'))
   answer = gets.chomp
-  break unless replay?(answer)
+  if replay?(answer)
+    system 'clear'
+  else
+    break
+  end
+  # break unless replay?(answer)
 end
 
 # ------ CLOSING MESSAGE ------
