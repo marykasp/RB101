@@ -1,3 +1,4 @@
+#NOTE NEED TO FIGURE OUT IF LOAN DURATION IS not a full year
 LANGUAGE = 'en'
 require 'yaml'
 MESSAGES = YAML.load_file('mortgage_messages.yml')
@@ -20,7 +21,8 @@ def positive_number?(input)
   input.to_i >= 0 || input.to_f >= 0
 end
 
-def percentage(interest)
+# Calculations
+def get_apr(interest)
   interest.to_f / 100
 end
 
@@ -38,7 +40,7 @@ def get_name
     prompt("Please enter a valid name.")
   end
 
-  prompt("Hello #{name}!")
+  prompt("Hello #{name.strip()}!")
 end
 
 def get_loan_amount
@@ -77,20 +79,26 @@ def get_interest_rate
     interest_rate = gets.chomp
 
     if number?(interest_rate) && positive_number?(interest_rate)
-      return interest_rate
+      break
     else
       prompt(messages('valid_number'))
     end
   end
+
+  return get_apr(interest_rate)
 end
 
 def display_payment(amount, monthly_interest, months)
   monthly_payment = payment(amount, monthly_interest, months)
-  puts "Your monthly payment is $#{format('%.2f', monthly_payment)}"
+  if monthly_interest == 0
+    prompt("Your monthly payment is $#{format('%.2f', (amount.to_f / months))}")
+  else
+    prompt("Your monthly payment is $#{format('%.2f', monthly_payment)}")
+  end
 end
 
 def replay?(string)
-  string.downcase.start_with?('y')
+  string.downcase == 'y' || string.downcase == 'yes'
 end
 
 # ------ WELCOME ------
@@ -102,7 +110,7 @@ loop do
   loan_amount = get_loan_amount()
   months = get_loan_duration().to_i() * 12
   # calculate annual interest rate (APR)
-  annual_interest_rate = percentage(get_interest_rate())
+  annual_interest_rate = get_interest_rate()
   # calculate the monthly interest rate using the APR
   monthly_interest_rate = annual_interest_rate / 12
 
