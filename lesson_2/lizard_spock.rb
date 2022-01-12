@@ -2,7 +2,7 @@ require 'yaml'
 MESSAGES = YAML.load_file('lizard_spock_messages.yml')
 
 # -------- CONSTANTS --------
-ROUNDS = 3
+MAX_WINS = 3
 
 VALID_CHOICES = {
   'rock' => 'r',
@@ -37,7 +37,7 @@ MSG
 
 welcome_message = <<-MSG
 Welcome to rock, paper, lizard, and spock game!
-First to #{ROUNDS} is the winner!
+First to #{MAX_WINS} is the winner!
 MSG
 
 # -------- METHODS --------
@@ -51,9 +51,9 @@ end
 
 # returns a boolean
 def user_reponse_yes
-  answer = gets.chomp
-  continue = ['y', 'yes']
-  continue.include?(answer.downcase)
+  answer = gets.chomp.downcase
+  puts answer
+  ['y', 'yes', 'yup'].include?(answer)
 end
 
 def display_rules(answer)
@@ -100,13 +100,13 @@ def win?(player1, player2)
   GAME[player1.to_sym].include?(player2)
 end
 
-def update_score(player, computer, player_score, computer_score)
+def update_score(player, computer, scores)
   if win?(player, computer)
-    player_score += 1
+    scores[:player] += 1
   elsif win?(computer, player)
-    computer_score += 1
+    scores[:computer] += 1
   end
-  return player_score, computer_score
+  return scores
 end
 
 def display_result(player, computer, round)
@@ -120,8 +120,8 @@ def display_result(player, computer, round)
 end
 
 def display_winner(score1, score2)
-  prompt(messages('user_wins')) if score1 == ROUNDS
-  prompt(messages('computer_wins')) if score2 == ROUNDS
+  prompt(messages('user_wins')) if score1 == MAX_WINS
+  prompt(messages('computer_wins')) if score2 == MAX_WINS
 end
 
 def rematch?
@@ -140,8 +140,9 @@ prompt("#{messages('hello')} #{name}!")
 # -------- MAIN GAME  --------
 loop do
   round = 1
-  player_score = 0
-  computer_score = 0
+  # player_score = 0
+  # computer_score = 0
+  scores = { player: 0, computer: 0 }
 
   loop do
     # if user chose abbreviated value return the full word,
@@ -150,15 +151,14 @@ loop do
     system 'clear'
 
     prompt("The user chose: #{user_choice}; computer chose: #{computer_choice}")
-    player_score, computer_score =
-      update_score(user_choice, computer_choice, player_score, computer_score)
+    update_score(user_choice, computer_choice, scores)
     display_result(user_choice, computer_choice, round)
-    prompt("Player score: #{player_score}; Computer score: #{computer_score}")
+    prompt("Player score: #{scores[:player]}; Computer score: #{scores[:computer]}")
 
     # add a round
     round += 1
-    if player_score == 3 || computer_score == 3
-      display_winner(player_score, computer_score)
+    if scores[:player] == MAX_WINS || scores[:computer]== MAX_WINS
+      display_winner(scores[:player], scores[:computer])
       break
     end
   end
