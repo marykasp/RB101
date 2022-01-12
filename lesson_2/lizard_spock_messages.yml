@@ -1,0 +1,8 @@
+welcome: "Welcome to the Loan Calculator!"
+name: "Please enter your name:"
+valid_name: "Please enter a valid name"
+any_key: "Hit any key to continue to game"
+valid: "Please pick a valid choice"
+hello: "Hello and good luck"
+play_again: "Would you like to play again? ('y' to continue)"
+view_rules: "Would you like to see the rules? (y or n)"
