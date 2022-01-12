@@ -10,6 +10,7 @@ def prompt(message)
 end
 
 def get_name
+  name = ''
   loop do
     prompt("What is your name?")
     name = gets.chomp
@@ -39,6 +40,16 @@ def get_computer_choice(choices)
   return computer_choice
 end
 
+def display_results(player, computer)
+  if (player == 'rock' && computer == 'scissors') || (player == 'paper' && computer == 'rock') || (player == 'scissors' && computer == 'paper')
+    prompt("You won!")
+  elsif (player == 'rock' && computer == 'paper') || (player == 'paper' && computer == 'scissors') || (player == 'scissors' && computer == 'rock')
+    prompt("Computer won!")
+  else
+    prompt("It's a tie!")
+  end
+end
+
 # returns a boolean value
 def replay?
   prompt("Would you like to play again? (y to continue)")
@@ -49,7 +60,7 @@ end
 # -------- WELCOME --------
 prompt("Welcome to Rock Paper Scissors Game!")
 name = get_name()
-prompt("Hello #{name}")
+prompt("Hello #{name}!!")
 
 # -------- MAIN GAME --------
 loop do
@@ -58,27 +69,16 @@ loop do
   prompt("Now the computer is picking...")
   computer_choice = get_computer_choice(VALID_CHOICES)
 
-  prompt("You choose: #{user_choice}")
-  prompt("The computer's choice is: #{computer_choice}")
+  prompt("You chose: #{user_choice}; computer chose: #{computer_choice}")
 
-  if user_choice == computer_choice
-    prompt("Its a tie!!")
-  elsif user_choice == 'rock' && computer_choice == 'scissors'
-    prompt("User wins!!")
-  elsif user_choice == 'paper' && computer_choice == 'rock'
-    prompt("User wins!")
-  elsif user_choice == 'scissors' && computer_choice == 'paper'
-    prompt('User wins!')
-  elsif computer_choice == 'rock' && user_choice == 'scissors'
-    prompt("Computer wins")
-  elsif computer_choice == 'paper' && user_choice == 'rock'
-    prompt("Computer wins!")
-  elsif computer_choice == 'scissors' && user_choice == 'paper'
-    prompt("Computer wins!")
+  display_results(user_choice, computer_choice)
+
+  if replay?()
+    system 'clear'
+  else
+    break
   end
-
-  break unless replay?()
 end
-
+# -------- EXIT MAIN GAME --------
 prompt("Thanks for playing Rock, Paper, Scissors!")
 prompt("Goodbye #{name}")
