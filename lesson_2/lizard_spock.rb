@@ -121,8 +121,8 @@ def display_result(player, computer, round)
 end
 
 def display_winner(score1, score2)
-  prompt("You won the match! Congrats :)") if score1 == ROUNDS
-  prompt("You lost, computer wins :(") if score2 == ROUNDS
+  prompt(messages('user_wins')) if score1 == ROUNDS
+  prompt(messages('computer_wins')) if score2 == ROUNDS
 end
 
 def rematch?
