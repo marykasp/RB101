@@ -160,7 +160,6 @@ loop do
     prompt("Player score: #{player_score}; Computer score: #{computer_score}")
 
     if player_score == 3 || computer_score == 3
-      # display winner only when one score equates to 3
       display_winner(player_score, computer_score)
       break
     end
