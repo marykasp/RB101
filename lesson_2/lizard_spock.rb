@@ -62,8 +62,6 @@ def display_rules(answer)
     prompt(messages('any_key'))
     key = gets.chomp
     system 'clear' if key
-  else
-    system 'clear'
   end
 end
 
@@ -72,10 +70,10 @@ def get_name
   loop do
     prompt(messages('name'))
     name = gets.chomp
-
     break unless name.empty?
     prompt(messages('valid_name'))
   end
+
   name
 end
 
@@ -94,6 +92,7 @@ def get_user_choice
 end
 
 def get_unabbreviated_choice(choice)
+  # returns the key of value passed in or just returns the key
   VALID_CHOICES.key(choice) || choice
 end
 
@@ -154,11 +153,10 @@ loop do
     player_score, computer_score =
       update_score(user_choice, computer_choice, player_score, computer_score)
     display_result(user_choice, computer_choice, round)
+    prompt("Player score: #{player_score}; Computer score: #{computer_score}")
 
     # add a round
     round += 1
-    prompt("Player score: #{player_score}; Computer score: #{computer_score}")
-
     if player_score == 3 || computer_score == 3
       display_winner(player_score, computer_score)
       break
