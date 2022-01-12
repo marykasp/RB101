@@ -1,16 +1,8 @@
 # ask user to make a choice
 VALID_CHOICES = ['rock', 'paper', 'scissors']
-
-def test_method
-  prompt('test message')
-end
-
-# test_method() # test method won't work here since prompt method has not yet been saved in memory
 def prompt(message)
   puts "=> #{message}"
 end
-
-# test_method()
 
 def display_results(player, computer)
   if (player == 'rock' && computer == 'scissors') || (player == 'paper' && computer == 'rock') || (player == 'scissors' && computer == 'paper')
@@ -20,14 +12,12 @@ def display_results(player, computer)
   else
     prompt("It's a tie!")
   end
-
 end
-
 
 loop do
   choice = ''
   loop do
-    prompt("Choose one: #{VALID_CHOICES.join(", ")}")
+    prompt("Choose one: #{VALID_CHOICES.join(', ')}")
     choice = Kernel.gets().chomp()
 
     if VALID_CHOICES.include?(choice)

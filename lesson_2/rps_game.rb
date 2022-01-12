@@ -25,7 +25,7 @@ end
 
 def get_user_choice
   loop do
-    prompt("Please pick: #{VALID_CHOICES.join(", ")}")
+    prompt("Please pick: #{VALID_CHOICES.join(', ')}")
     user_choice = gets.chomp.downcase
     if VALID_CHOICES.include?(user_choice)
       return user_choice
@@ -36,8 +36,7 @@ def get_user_choice
 end
 
 def get_computer_choice(choices)
-  computer_choice = choices.sample()
-  return computer_choice
+  choices.sample()
 end
 
 def display_results(player, computer)
