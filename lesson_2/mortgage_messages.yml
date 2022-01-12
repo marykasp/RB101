@@ -7,7 +7,7 @@ en:
   interest_rate: "What is the Annual Percentage Rate (APR)?"
   rate_example: "(Example: 5 for 5% or 2.5 for 2.5%)"
   again: "Would you like to calculate another loan (y to continue)"
-  closing_message: "Thank you for using the Loan Calculator!"
+  closing_message: "Thank you for using the Loan Calculator"
 es:
   welcome: "¡Bienvenido a la calculadora de préstamos!"
   name: "Por favor, escriba su nombre:"

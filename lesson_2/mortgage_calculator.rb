@@ -35,7 +35,6 @@ def get_name
   name = ''
   loop do
     name = gets.chomp
-
     break unless name.empty?
     prompt("Please enter a valid name.")
   end
@@ -44,7 +43,6 @@ def get_name
 end
 
 def get_loan_amount
-  loan_amount = ''
   loop do
     prompt(messages('loan_amount'))
     loan_amount = gets.chomp
@@ -58,7 +56,6 @@ def get_loan_amount
 end
 
 def get_loan_duration
-  years = ''
   loop do
     prompt(messages('loan_duration'))
     years = gets.chomp
