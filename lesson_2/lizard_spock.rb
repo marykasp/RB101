@@ -52,8 +52,7 @@ end
 # returns a boolean
 def user_reponse_yes
   answer = gets.chomp.downcase
-  puts answer
-  ['y', 'yes', 'yup'].include?(answer)
+  ['y', 'yes'].include?(answer)
 end
 
 def display_rules(answer)
@@ -100,13 +99,13 @@ def win?(player1, player2)
   GAME[player1.to_sym].include?(player2)
 end
 
+# updating the elements in the scores collection
 def update_score(player, computer, scores)
   if win?(player, computer)
     scores[:player] += 1
   elsif win?(computer, player)
     scores[:computer] += 1
   end
-  return scores
 end
 
 def display_result(player, computer, round)
@@ -145,7 +144,7 @@ loop do
   scores = { player: 0, computer: 0 }
 
   loop do
-    # if user chose abbreviated value return the full word,
+    # if user chose abbreviated value return the full word
     user_choice = get_unabbreviated_choice(get_user_choice())
     computer_choice = VALID_CHOICES.keys.sample()
     system 'clear'
@@ -153,11 +152,13 @@ loop do
     prompt("The user chose: #{user_choice}; computer chose: #{computer_choice}")
     update_score(user_choice, computer_choice, scores)
     display_result(user_choice, computer_choice, round)
-    prompt("Player score: #{scores[:player]}; Computer score: #{scores[:computer]}")
+
+    prompt("Player score: #{scores[:player]}")
+    prompt("Computer score: #{scores[:computer]}")
 
     # add a round
     round += 1
-    if scores[:player] == MAX_WINS || scores[:computer]== MAX_WINS
+    if scores[:player] == MAX_WINS || scores[:computer] == MAX_WINS
       display_winner(scores[:player], scores[:computer])
       break
     end
