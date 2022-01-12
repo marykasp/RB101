@@ -22,7 +22,7 @@ GAME = {
 }
 
 # -------- FORMATTED MESSAGES --------
-rules = <<-MSG
+RULES = <<-MSG
           Scissors cuts paper,
           paper covers rock,
           rock crushes lizard,
@@ -56,9 +56,9 @@ def user_reponse_yes
   continue.include?(answer.downcase)
 end
 
-def display_rules(answer, rules)
+def display_rules(answer)
   if answer
-    puts(rules)
+    puts(RULES)
     prompt(messages('any_key'))
     key = gets.chomp
     system 'clear' if key
@@ -133,10 +133,10 @@ end
 # -------- WELCOME MESSAGE/DISPLAY RULES --------
 prompt(welcome_message)
 prompt(messages('view_rules'))
-display_rules(user_reponse_yes(), rules)
+display_rules(user_reponse_yes())
 
 name = get_name()
-prompt("#{messages('hello')} #{name}")
+prompt("#{messages('hello')} #{name}!")
 
 # -------- MAIN GAME  --------
 loop do
@@ -151,7 +151,8 @@ loop do
     system 'clear'
 
     prompt("The user chose: #{user_choice}; computer chose: #{computer_choice}")
-    player_score, computer_score = update_score(user_choice, computer_choice, player_score, computer_score)
+    player_score, computer_score =
+      update_score(user_choice, computer_choice, player_score, computer_score)
     display_result(user_choice, computer_choice, round)
 
     # add a round
