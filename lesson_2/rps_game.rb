@@ -11,6 +11,7 @@ end
 
 def get_name
   name = ''
+
   loop do
     prompt("What is your name?")
     name = gets.chomp
@@ -27,7 +28,8 @@ def get_user_choice
   loop do
     prompt("Please pick: #{VALID_CHOICES.join(', ')}")
     user_choice = gets.chomp.downcase
-    if VALID_CHOICES.include?(user_choice)
+
+    if VALID_CHOICES.include?(user_choice) && !(user_choice.empty?)
       return user_choice
     else
       prompt("That's not a valid choice")
@@ -39,10 +41,16 @@ def get_computer_choice(choices)
   choices.sample()
 end
 
+def win?(first, second)
+  (first == 'rock' && second == 'scissors') ||
+    (first == 'paper' && second == 'rock') ||
+    (first == 'scissors' && second == 'paper')
+end
+
 def display_results(player, computer)
-  if (player == 'rock' && computer == 'scissors') || (player == 'paper' && computer == 'rock') || (player == 'scissors' && computer == 'paper')
+  if win?(player, computer)
     prompt("You won!")
-  elsif (player == 'rock' && computer == 'paper') || (player == 'paper' && computer == 'scissors') || (player == 'scissors' && computer == 'rock')
+  elsif win?(computer, player)
     prompt("Computer won!")
   else
     prompt("It's a tie!")
@@ -69,7 +77,6 @@ loop do
   computer_choice = get_computer_choice(VALID_CHOICES)
 
   prompt("You chose: #{user_choice}; computer chose: #{computer_choice}")
-
   display_results(user_choice, computer_choice)
 
   if replay?()

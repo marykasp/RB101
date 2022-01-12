@@ -94,8 +94,10 @@ def display_payment(amount, monthly_interest, months)
   end
 end
 
-def replay?(string)
-  string.downcase == 'y' || string.downcase == 'yes'
+def replay?
+  prompt(messages('again'))
+  answer = gets.chomp.downcase
+  answer == 'y' || answer == 'yes'
 end
 
 # ------ WELCOME ------
@@ -115,9 +117,7 @@ loop do
   # method that calculates and displays monthly payment
   display_payment(loan_amount, monthly_interest_rate, months)
 
-  prompt(messages('again'))
-  answer = gets.chomp
-  if replay?(answer)
+  if replay?()
     system 'clear'
   else
     break
