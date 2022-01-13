@@ -127,8 +127,8 @@ def display_round_result(player, computer, round)
   end
 end
 
-def display_winner(score1, score2)
-  prompt(messages('user_wins')) if score1 == MAX_WINS
+def display_winner(score1, score2, name)
+  prompt("#{name} #{messages('user_wins')}") if score1 == MAX_WINS
   prompt(messages('computer_wins')) if score2 == MAX_WINS
 end
 
@@ -158,7 +158,7 @@ loop do
     computer_choice = VALID_CHOICES.keys.sample()
     system 'clear'
 
-    prompt("User:#{user_choice} #{CHOICE_EMOJIS[user_choice.to_sym]}  "\
+    prompt("#{name}:#{user_choice} #{CHOICE_EMOJIS[user_choice.to_sym]}  "\
       "Computer:#{computer_choice} #{CHOICE_EMOJIS[computer_choice.to_sym]}")
 
     update_score(user_choice, computer_choice, scores)
@@ -168,7 +168,7 @@ loop do
 
     round += 1
     if scores[:player] == MAX_WINS || scores[:computer] == MAX_WINS
-      display_winner(scores[:player], scores[:computer])
+      display_winner(scores[:player], scores[:computer], name)
       break
     end
   end
