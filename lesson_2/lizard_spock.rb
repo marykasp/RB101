@@ -11,14 +11,21 @@ VALID_CHOICES = {
   'spock' => 'sp',
   'lizard' => 'l'
 }
-# VALID_CHOICES = ['rock', 'paper', 'scissor', 'lizard', 'spock']
+
+CHOICE_EMOJIS = {
+  "rock": "🪨",
+  "paper": "📃",
+  "scissor": "✂️",
+  "lizard": "🦎",
+  "spock": "🖖"
+}
 
 GAME = {
-  'rock': ['scissor', 'lizard', 'sc', 'l'],
-  'paper': ['rock', 'spock', 'r', 'sp'],
-  'scissor': ['paper', 'lizard', 'p', 'l'],
-  'lizard': ['spock', 'paper', 'sp', 'p'],
-  'spock': ['rock', 'scissor', 'r', 'sc']
+  'rock': ['scissor', 'lizard'],
+  'paper': ['rock', 'spock'],
+  'scissor': ['paper', 'lizard'],
+  'lizard': ['spock', 'paper'],
+  'spock': ['rock', 'scissor']
 }
 
 # -------- FORMATTED MESSAGES --------
@@ -46,7 +53,7 @@ def messages(message)
 end
 
 def prompt(message)
-  puts "=> #{message}"
+  puts ">> #{message}"
 end
 
 # returns a boolean
@@ -72,8 +79,12 @@ def get_name
     break unless name.empty?
     prompt(messages('valid_name'))
   end
-
   name
+end
+
+def format_choice(choice)
+  # returns the key of value passed in or just returns the key
+  VALID_CHOICES.key(choice) || choice
 end
 
 def get_user_choice
@@ -81,18 +92,13 @@ def get_user_choice
     prompt("Please enter #{VALID_CHOICES.keys.join(', ')}")
     puts("Or: #{VALID_CHOICES.values.join(', ')}")
     choice = gets.chomp
-
-    if VALID_CHOICES.include?(choice) || VALID_CHOICES.value?(choice)
+    choice = format_choice(choice)
+    if VALID_CHOICES.include?(choice)
       return choice
     else
       prompt(messages('valid'))
     end
   end
-end
-
-def get_unabbreviated_choice(choice)
-  # returns the key of value passed in or just returns the key
-  VALID_CHOICES.key(choice) || choice
 end
 
 def win?(player1, player2)
@@ -108,7 +114,7 @@ def update_score(player, computer, scores)
   end
 end
 
-def display_result(player, computer, round)
+def display_round_result(player, computer, round)
   if win?(player, computer)
     prompt("USER WINS round #{round}!!!")
   elsif win?(computer, player)
@@ -145,18 +151,18 @@ loop do
 
   loop do
     # if user chose abbreviated value return the full word
-    user_choice = get_unabbreviated_choice(get_user_choice())
+    user_choice = get_user_choice()
     computer_choice = VALID_CHOICES.keys.sample()
     system 'clear'
 
-    prompt("The user chose: #{user_choice}; computer chose: #{computer_choice}")
+    prompt("The user chose: #{CHOICE_EMOJIS[user_choice.to_sym]}")
+    prompt("computer chose: #{CHOICE_EMOJIS[computer_choice.to_sym]}")
+
     update_score(user_choice, computer_choice, scores)
-    display_result(user_choice, computer_choice, round)
+    display_round_result(user_choice, computer_choice, round)
 
-    prompt("Player score: #{scores[:player]}")
-    prompt("Computer score: #{scores[:computer]}")
+    prompt("Player: #{scores[:player]} // Computer: #{scores[:computer]}")
 
-    # add a round
     round += 1
     if scores[:player] == MAX_WINS || scores[:computer] == MAX_WINS
       display_winner(scores[:player], scores[:computer])
