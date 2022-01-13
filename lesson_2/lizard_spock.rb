@@ -13,19 +13,19 @@ VALID_CHOICES = {
 }
 
 CHOICE_EMOJIS = {
-  "rock": "🪨",
-  "paper": "📃",
-  "scissor": "✂️",
-  "lizard": "🦎",
-  "spock": "🖖"
+  rock: "🪨",
+  paper: "📃",
+  scissor: "✂️",
+  lizard: "🦎",
+  spock: "🖖"
 }
 
 GAME = {
-  'rock': ['scissor', 'lizard'],
-  'paper': ['rock', 'spock'],
-  'scissor': ['paper', 'lizard'],
-  'lizard': ['spock', 'paper'],
-  'spock': ['rock', 'scissor']
+  rock: ['scissor', 'lizard'],
+  paper: ['rock', 'spock'],
+  scissor: ['paper', 'lizard'],
+  lizard: ['spock', 'paper'],
+  spock: ['rock', 'scissor']
 }
 
 # -------- FORMATTED MESSAGES --------
