@@ -28,15 +28,6 @@ GAME = {
   'spock': ['rock', 'scissor']
 }
 
-
-GAME = {
-  'rock': ['scissor', 'lizard'],
-  'paper': ['rock', 'spock'],
-  'scissor': ['paper', 'lizard'],
-  'lizard': ['spock', 'paper'],
-  'spock': ['rock', 'scissor']
-}
-
 # -------- FORMATTED MESSAGES --------
 RULES = <<-MSG
           Scissors cuts paper,
@@ -98,8 +89,9 @@ end
 
 def get_user_choice
   loop do
-    prompt("Please enter #{VALID_CHOICES.keys.join(', ')}")
-    puts("Or: #{VALID_CHOICES.values.join(', ')}")
+    prompt("Please enter #{VALID_CHOICES.keys.join(', ')}  "\
+      "(Or: #{VALID_CHOICES.values.join(', ')})")
+
     choice = gets.chomp
     choice = format_choice(choice)
     if VALID_CHOICES.include?(choice)
