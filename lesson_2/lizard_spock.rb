@@ -28,6 +28,15 @@ GAME = {
   'spock': ['rock', 'scissor']
 }
 
+
+GAME = {
+  'rock': ['scissor', 'lizard'],
+  'paper': ['rock', 'spock'],
+  'scissor': ['paper', 'lizard'],
+  'lizard': ['spock', 'paper'],
+  'spock': ['rock', 'scissor']
+}
+
 # -------- FORMATTED MESSAGES --------
 RULES = <<-MSG
           Scissors cuts paper,
@@ -155,8 +164,8 @@ loop do
     computer_choice = VALID_CHOICES.keys.sample()
     system 'clear'
 
-    prompt("The user chose: #{CHOICE_EMOJIS[user_choice.to_sym]}")
-    prompt("computer chose: #{CHOICE_EMOJIS[computer_choice.to_sym]}")
+    prompt("User:#{user_choice} #{CHOICE_EMOJIS[user_choice.to_sym]}  "\
+      "Computer:#{computer_choice} #{CHOICE_EMOJIS[computer_choice.to_sym]}")
 
     update_score(user_choice, computer_choice, scores)
     display_round_result(user_choice, computer_choice, round)
