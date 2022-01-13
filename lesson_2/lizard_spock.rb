@@ -158,7 +158,7 @@ loop do
     computer_choice = VALID_CHOICES.keys.sample()
     system 'clear'
 
-    prompt("#{name}:#{user_choice} #{CHOICE_EMOJIS[user_choice.to_sym]}  "\
+    prompt("#{name}: #{user_choice} #{CHOICE_EMOJIS[user_choice.to_sym]}  "\
       "Computer:#{computer_choice} #{CHOICE_EMOJIS[computer_choice.to_sym]}")
 
     update_score(user_choice, computer_choice, scores)
