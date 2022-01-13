@@ -68,6 +68,8 @@ def display_rules(answer)
     prompt(messages('any_key'))
     key = gets.chomp
     system 'clear' if key
+  else
+    system 'clear'
   end
 end
 
