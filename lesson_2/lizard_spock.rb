@@ -148,8 +148,6 @@ prompt("#{messages('hello')} #{name}!")
 # -------- MAIN GAME  --------
 loop do
   round = 1
-  # player_score = 0
-  # computer_score = 0
   scores = { player: 0, computer: 0 }
 
   loop do
