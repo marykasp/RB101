@@ -28,23 +28,22 @@ GAME = {
   spock: ['rock', 'scissor']
 }
 
-# -------- FORMATTED MESSAGES --------
 RULES = <<-MSG
           Scissors cuts paper,
-          paper covers rock,
-          rock crushes lizard,
-          lizard poisons Spock,
+          Paper covers rock,
+          Rock crushes lizard,
+          Lizard poisons Spock,
           Spock smashes scissors,
-          scissors decapitates lizard,
-          lizard eats paper,
-          paper disproves Spock,
+          Scissors decapitates lizard,
+          Lizard eats paper,
+          Paper disproves Spock,
           Spock vaporizes rock,
-          and as it always has, rock crushes scissors.
+          ...Rock crushes scissors.
 MSG
 
 welcome_message = <<-MSG
 Welcome to rock, paper, lizard, and spock game!
-First to #{MAX_WINS} is the winner!
+First to #{MAX_WINS} wins is the winner!
 MSG
 
 # -------- METHODS --------
@@ -58,16 +57,16 @@ end
 
 # returns a boolean
 def user_reponse_yes
-  answer = gets.chomp.downcase
-  ['y', 'yes'].include?(answer)
+  answer = gets.chomp
+  answer.downcase.start_with?('y')
 end
 
 def display_rules(answer)
   if answer
     puts(RULES)
     prompt(messages('any_key'))
-    key = gets.chomp
-    system 'clear' if key
+    continue = gets.chomp
+    system 'clear' if continue
   else
     system 'clear'
   end
