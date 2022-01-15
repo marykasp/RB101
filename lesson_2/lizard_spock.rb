@@ -57,8 +57,16 @@ end
 
 # returns a boolean
 def user_reponse_yes
-  answer = gets.chomp
-  answer.downcase.start_with?('y')
+  loop do
+    answer = gets.chomp
+    if answer == 'yes' || answer == 'y'
+      return true
+    elsif answer == 'no' || answer == 'n'
+      return false
+    else
+      prompt("Please enter a valid response (yes or no)")
+    end
+  end
 end
 
 def display_rules(answer)
