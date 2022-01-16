@@ -3,3 +3,4 @@
 Lessons and exercises for [Launch School's](https://www.launchschool.com) **RB101** course
 
 - [Lesson 2](./lesson_2)
+- [Lesson 3](./lesson_3)
