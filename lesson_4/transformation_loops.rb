@@ -1,6 +1,6 @@
 def general_produce_selection(produce_list, criteria)
-	selected_produce = {}
-	for key, value in produce_list
+  selected_produce = {}
+  for key, value in produce_list
 		if value == criteria
       selected_produce[key] = value
     end
