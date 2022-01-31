@@ -16,8 +16,8 @@ PRINT result
 
 ### a method that takes an array of strings, and returns a string that is all those strings concatenated together
 
-- iterate over the array of strings
 - create a result variable that is an empty screen
+- iterate over the array of strings
 - for each iteration concatenate the current value to the result
 - return the result from the method
 
@@ -68,7 +68,7 @@ PRINT result
 Given a string
 
 - Set a count variable to keep track of the number of times a character occurs in a string
-- Traverse the string character by character
+- Iterate over the string character by character
 - Iterator variable to keep track of the index of the character currently on
 - Check for each character if it matches with the given character if so increment the count by 1
 - when count becomes 3 return the iterator variable
