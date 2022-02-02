@@ -15,3 +15,10 @@ end
 
 
 puts total
+
+# using reduce method
+total_male_ages = munsters.values.reduce(0) do |memo, nested_object|
+  nested_object["gender"] == "male" ? memo += nested_object["age"] : memo
+end
+
+p total_male_ages
