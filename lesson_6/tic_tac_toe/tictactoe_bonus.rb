@@ -4,22 +4,15 @@ require 'pry-byebug'
 INITIAL_MARKER = " "
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
-GAME = 5
+WINNING_NUMBER = 3
+MAX_SCORE = 5
 
-GREETING= <<-MSG
+GREETING = <<-MSG
 ***** Welcome to tic tac toe! *****
 Your mark is 'X'. The first player to get to 5 wins, is the champion.
 
 If you've never played before type 'help' for game rules.
 If you're ready press 'Enter'.
-MSG
-
-RULES = <<-MSG
---------
-Tic Tac Toe is a 2 player game played on a 3x3 board. Each player takes a turn and marks a square on the board. First player to reach 3 squares in a row, including diagonals, wins. If all 9 squares are marked and no player has 3 squares in a row, then the game is a tie. You #{PLAYER_MARKER} will be playing the computer #{COMPUTER_MARKER}.
-
-The first to 5 games is the ultimate winner! Have fun playing!
---------
 MSG
 
 BOARD_DESIGN = <<-MSG
@@ -32,19 +25,18 @@ Squares are numbered 1 - 9 from left to right and in descending rows
                       7 | 8 | 9
 MSG
 
+RULES = <<-MSG
+--------
+Tic Tac Toe is a 2 player game played on a 3x3 board. Each player takes a turn and marks a square on the board. First player to reach 3 squares in a row, including diagonals, wins. If all 9 squares are marked and no player has 3 squares in a row, then the game is a tie. You #{PLAYER_MARKER} will be playing the computer #{COMPUTER_MARKER}.
+
+#{BOARD_DESIGN}
+Have fun playing!
+--------
+MSG
+
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
                 [[1, 5, 9], [3, 5, 7]] # diagonals
-# WINNING_LINES = [
-#   %w(1 2 3),
-#   %w(4 5 6),
-#   %w(7 8 9),
-#   %w(1 4 7),
-#   %w(2 5 8),
-#   %w(3 6 9),
-#   %w(1 5 9),
-#   %w(3 5 7)
-# ]
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -75,27 +67,24 @@ def initialize_board
   new_board
 end
 
+# rubocop:disable Metrics/AbcSize
 def display_board(brd)
-    puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
-    puts ""
-    puts "     |     |"
-    puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}  "
-    puts "     |     |"
-    puts "-----+-----+-----"
-    puts "     |     |"
-    puts "  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}"
-    puts "     |     |"
-    puts "-----+-----+-----"
-    puts "     |     |"
-    puts "  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  "
-    puts "     |     |"
-    puts ""
+  puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
+  puts ""
+  puts "     |     |"
+  puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}  "
+  puts "     |     |"
+  puts "-----+-----+-----"
+  puts "     |     |"
+  puts "  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}"
+  puts "     |     |"
+  puts "-----+-----+-----"
+  puts "     |     |"
+  puts "  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}  "
+  puts "     |     |"
+  puts ""
 end
-
-def empty_squares(brd)
-  # returns an array of keys that have empty spaces
-  brd.keys.select { |num| brd[num] == INITIAL_MARKER}
-end
+# rubocop:enable Metrics/AbcSize
 
 # default parameters
 def joinor(arr, delimiter=", ", word="or")
@@ -107,6 +96,10 @@ def joinor(arr, delimiter=", ", word="or")
     arr[-1] = "#{word} #{arr.last}"
     arr.join(delimiter)
   end
+end
+
+def valid_integer?(players_choice)
+  players_choice.to_s.to_i == players_choice
 end
 
 def decide_current_player
@@ -121,46 +114,77 @@ def decide_current_player
   end
 end
 
-
 def alternate_player(active_player)
   return 'computer' if active_player == 'player'
   return 'player' if active_player == 'computer'
 end
 
-def place_piece!(brd, current_player, player_choices, computer_choices)
+# MOVES
+def place_piece!(brd, current_player)
   if current_player == 'player'
-    square = user_move(brd)
-    player_places_piece!(brd, square)
-    update_player_squares!(brd, square, player_choices)
+    player_places_piece!(brd)
   elsif current_player == 'computer'
     computer_places_piece!(brd)
   end
 end
 
-def user_move(brd)
+def player_places_piece!(brd)
   square = ''
   loop do
     prompt "Choose a position to place a piece: #{joinor(empty_squares(brd))}"
     square = gets.chomp.to_i
-    break if empty_squares(brd).include?(square)
+    break if empty_squares(brd).include?(square) && valid_integer?(square)
     prompt "Please choose a valid square choice"
   end
 
-  square
-end
-
-def player_places_piece!(brd, square)
   brd[square] = PLAYER_MARKER
 end
 
+def choose_random_square(brd)
+  empty_squares(brd).sample
+end
+
+def find_at_risk_squares(line, brd, marker)
+  if brd.values_at(*line).count(marker) == 2
+    # returns keys included in the winning line as an array
+    brd.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
+  end
+end
+
+def computer_offense(brd)
+  square = nil
+  WINNING_LINES.each do |line|
+    square = find_at_risk_squares(line, brd, COMPUTER_MARKER)
+    break if square
+  end
+  square
+end
+
+# find an empty square on a winning line with 2 player markers and one empty
+def computer_defense(brd)
+  square = nil
+  WINNING_LINES.each do |line|
+    square = find_at_risk_squares(line, brd, PLAYER_MARKER)
+    break if square
+  end
+  square
+end
+
 def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
+  square = if computer_offense(brd)
+             computer_offense(brd)
+           elsif computer_defense(brd)
+             computer_defense(brd)
+           else
+             choose_random_square(brd)
+           end
+
   brd[square] = COMPUTER_MARKER
 end
 
-def update_player_squares!(brd, choice, player_squares)
-    player_squares << choice
-    player_squares.sort!
+def empty_squares(brd)
+  # returns an array of keys that have empty spaces
+  brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
 def board_full?(brd)
@@ -171,18 +195,33 @@ end
 # detect winner for each round
 def detect_winner(brd)
   WINNING_LINES.each do |line|
-    if brd.values_at(line[0], line[1], line[2]).count(PLAYER_MARKER) == 3
+    if brd.values_at(*line).count(PLAYER_MARKER) == WINNING_NUMBER
       return "Player"
-    elsif brd.values_at(line[0], line[1], line[2]).count(COMPUTER_MARKER) == 3
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == WINNING_NUMBER
       return "Computer"
     end
   end
-
   nil
 end
 
-def someone_won?(brd)
+def game_won?(brd)
   !!detect_winner(brd)
+end
+
+def game_over?(brd)
+  game_won?(brd) || board_full?(brd)
+end
+
+# PLAY GAME
+def play_game!(brd, current_player)
+  loop do
+    display_board(brd)
+    # current player makes move
+    place_piece!(brd, current_player)
+    # change current player
+    current_player = alternate_player(current_player)
+    break if game_over?(brd)
+  end
 end
 
 def update_score(score, brd)
@@ -193,65 +232,63 @@ def update_score(score, brd)
   end
 end
 
-def display_score(score, set)
-  prompt "** Set ##{set} - Player: #{score[:player]}, Computer: #{score[:computer]} **"
+def display_score(score, game)
+  prompt("** Set ##{game} - Player: #{score[:player]}. "\
+   "Computer: #{score[:computer]} **")
 end
 
-def determine_champion(score)
-  if score[:player] > score[:computer]
-    return 'Player'
-  elsif score[:computer] > score[:player]
-    return 'Computer'
+def ultimate_winner?(score)
+  score[:player] == MAX_SCORE || score[:computer] == MAX_SCORE
+end
+
+def display_champion(score)
+  if score[:player] == MAX_SCORE
+    prompt "Player is the ultimate winner!"
+  elsif score[:computer] == MAX_SCORE
+    prompt "Computer is the ultimate winner! Better luck next time"
   else
     prompt "The set is tied!"
   end
 end
 
+def play_again?
+  system 'clear'
+  answer = ''
+  loop do
+    prompt "Rematch? (y or n)"
+    answer = gets.chomp
+    break if ['n', 'no', 'y', 'yes'].include?(answer)
+    prompt "Please enter a valid choice."
+  end
+  answer.downcase.start_with?('y')
+end
 # MAIN GAME
 # =========================================================
 
 # Game starts here
-# Score needs initialize before main loop
 new_round
+
 loop do
-  score = { :player => 0, :computer => 0 }
+  score = { player: 0, computer: 0 }
+  current_player = decide_current_player
   game = 1
 
-  while score[:player] < GAME && score[:computer] < GAME
+  # play game - round of 5 games
+  loop do
     board = initialize_board
-    current_player = decide_current_player
-    player_squares = []
-    computer_squares = []
+    play_game!(board, current_player)
 
-    loop do
-      display_board(board)
-      place_piece!(board, current_player, player_squares, computer_squares)
-      current_player = alternate_player(current_player)
-
-      break if someone_won?(board) || board_full?(board)
-    end
-
-    display_board(board)
-
-    if someone_won?(board)
-      system 'clear'
-      update_score(score, board)
-      display_score(score, game)
-      # puts "#{player_squares}"
-    elsif board_full?(board)
-      prompt "It's a tie!"
-    end
-    # update set number on
+    update_score(score, board)
+    display_score(score, game)
     game += 1
+
+    break if ultimate_winner?(score)
   end
 
+  # display ultimate winner
+  display_champion(score)
 
-  # display the champion of the matches
-  prompt "#{determine_champion(score)} is the champion!"
-
-  prompt "Rematch? (y or n)"
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  break unless play_again?
 end
 
 system 'clear'

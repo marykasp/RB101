@@ -8,11 +8,11 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
                 [[1, 5, 9], [3, 5, 7]] # diagonals
 
-
 def prompt(msg)
   puts "=> #{msg}"
 end
 
+# rubocop:disable Metrics/AbcSize
 def display_board(brd)
   system 'clear'
   puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}"
@@ -30,9 +30,9 @@ def display_board(brd)
   puts "     |     |"
   puts ""
 end
-
+# rubocop:enable Metrics/AbcSize
 # keys (integers) represent squares in board, values represent mark to display
-# {1 => "X", 2 => 'O', 3 => ' ', 4 => ' ', 5 => ' ', 6 => ' ', 7 => ' ' , 8 => ' ', 9 => ' '}
+# {1 => "X", 2 => 'O', 3 => ' ', 4 => ' ', 5 => ' ', 6 => ' ' }
 
 def initialize_board
   new_board = {}
@@ -40,7 +40,8 @@ def initialize_board
   new_board
 end
 
-# check which board keys have empty spaces - returns array of keys (inspects board)
+# check which board keys have empty spaces
+# - returns array of keys (inspects board)
 def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
@@ -49,7 +50,7 @@ end
 def player_place_piece!(brd)
   square = ''
   loop do
-    prompt "Choose a square #{empty_squares(brd).join(", ")}: "
+    prompt "Choose a square #{empty_squares(brd).join(', ')}: "
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
     prompt "Sorry, that is not a valid choice"
@@ -71,13 +72,12 @@ end
 def detect_winner(brd)
   # iterate through winning lines
   WINNING_LINES.each do |line|
-    if brd[line[0]] == PLAYER_MARKER &&
-      brd[line[1]] == PLAYER_MARKER &&
-      brd[line[2]] == PLAYER_MARKER
+    # returns an array of values at those keys, count returns the number
+    # of times the marker occurs in that array
+    # splat operator *array - passes in all element in line one by one
+    if brd.values_at?(*line).count(PLAYER_MARKER) == 3
       return "Player"
-    elsif brd[line[0]] == COMPUTER_MARKER &&
-      brd[line[1]] == COMPUTER_MARKER &&
-      brd[line[2]] == COMPUTER_MARKER
+    elsif brd.values_at?(*line).count(COMPUTER_MARKER) == 3
       return "Computer"
     end
   end
@@ -121,5 +121,3 @@ loop do
 end
 
 prompt "Thanks for playing Tic Tac Toe! Good bye!"
-
-
