@@ -1,6 +1,8 @@
-require 'pry-byebug'
+require 'yaml'
+
 # CONSTANTS
 # =========================================================
+MESSAGES = YAML.load_file('tictactoe_messages.yml')
 INITIAL_MARKER = " "
 PLAYER_MARKER = 'X'
 COMPUTER_MARKER = 'O'
@@ -134,7 +136,7 @@ def player_places_piece!(brd)
     prompt "Choose a position to place a piece: #{joinor(empty_squares(brd))}"
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square) && valid_integer?(square)
-    prompt "Please choose a valid square choice"
+    prompt MESSAGES['valid_choice']
   end
 
   brd[square] = PLAYER_MARKER
@@ -243,24 +245,23 @@ end
 
 def display_champion(score)
   if score[:player] == MAX_SCORE
-    prompt "Player is the ultimate winner!"
+    prompt MESSAGES['player_winner']
   elsif score[:computer] == MAX_SCORE
-    prompt "Computer is the ultimate winner! Better luck next time"
+    prompt MESSAGES['computer_winner']
   else
     prompt "The set is tied!"
   end
 end
 
 def play_again?
-  system 'clear'
   answer = ''
   loop do
-    prompt "Rematch? (y or n)"
+    prompt MESSAGES['rematch']
     answer = gets.chomp
     break if ['n', 'no', 'y', 'yes'].include?(answer)
-    prompt "Please enter a valid choice."
+    prompt MESSAGES['valid_choice']
   end
-  answer.downcase.start_with?('y')
+  ['y', 'yes'].include?(answer)
 end
 # MAIN GAME
 # =========================================================
@@ -292,4 +293,4 @@ loop do
 end
 
 system 'clear'
-prompt "Thanks for playing Tic Tac Toe! Good bye!"
+prompt MESSAGES['goodbye']

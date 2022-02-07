@@ -75,9 +75,9 @@ def detect_winner(brd)
     # returns an array of values at those keys, count returns the number
     # of times the marker occurs in that array
     # splat operator *array - passes in all element in line one by one
-    if brd.values_at?(*line).count(PLAYER_MARKER) == 3
+    if brd.values_at(*line).count(PLAYER_MARKER) == 3
       return "Player"
-    elsif brd.values_at?(*line).count(COMPUTER_MARKER) == 3
+    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
       return "Computer"
     end
   end
