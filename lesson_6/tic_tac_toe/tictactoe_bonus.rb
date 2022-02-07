@@ -278,11 +278,10 @@ loop do
   loop do
     board = initialize_board
     play_game!(board, current_player)
-
+    display_board(board)
     update_score(score, board)
     display_score(score, game)
     game += 1
-
     break if ultimate_winner?(score)
   end
 
