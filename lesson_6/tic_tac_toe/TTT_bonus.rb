@@ -59,7 +59,6 @@ def greeting
   end
 
   if answer == 'help'
-    system 'clear'
     puts RULES
   end
 end
@@ -114,7 +113,6 @@ def decide_current_player
     when '2' then return 'computer'
     when '3' then return ['player', 'computer'].sample
     end
-    prompt "Please enter a valid choice (1, 2, 3)"
   end
 end
 
@@ -216,27 +214,27 @@ def game_over?(brd)
   game_won?(brd) || board_full?(brd)
 end
 
-# PLAY GAME
-def game_loop(brd, current_player)
+def initialize_game
+  system 'clear'
+  board = initialize_board
+  current_player = decide_current_player
+  prompt "The #{current_player} will play first!"
+  enter_to_continue
+  return board, current_player
+end
+
+def game_loop(current_player, brd)
   loop do
     display_board(brd)
     # current player makes move
     place_piece!(brd, current_player)
     # change current player
     current_player = alternate_player(current_player)
-    system 'clear'
     break if game_over?(brd)
   end
 end
 
-def play_game!(brd)
-  current_player = decide_current_player
-  prompt "The #{current_player} will play first!"
-  enter_to_continue
-  system 'clear'
-  game_loop(brd, current_player)
-end
-
+# SCORE
 def update_score(score, brd)
   if detect_winner(brd) == "Player"
     score[:player] += 1
@@ -250,14 +248,37 @@ def display_score(score, game)
    "Computer: #{score[:computer]} **")
 end
 
+# ROUND OVER
+def round_over(brd, score, game)
+  display_board(brd)
+  # update and display score
+  update_score(score, brd)
+  display_score(score, game)
+end
+
 def ultimate_winner?(score)
   score[:player] == MAX_SCORE || score[:computer] == MAX_SCORE
 end
 
-def round_over(brd, score, game)
-  display_board(brd)
-  update_score(score, brd)
-  display_score(score, game)
+# PLAY GAME
+def play_game!(score, game)
+  board, current_player = initialize_game
+  loop do
+    game_loop(current_player, board)
+    round_over(board, score, game)
+    game += 1
+    break if ultimate_winner?(score)
+  end
+end
+
+# PLAY GAME
+def start_game(score, game)
+  system 'clear'
+  greeting
+  puts "First to #{MAX_SCORE} wins!"
+  puts "Let's see who will play first..."
+  enter_to_continue
+  play_game!(score, game)
 end
 
 def display_champion(score)
@@ -280,30 +301,15 @@ def play_again?
   end
   ['y', 'yes'].include?(answer)
 end
-
 # MAIN GAME
 # =========================================================
-# Game starts here
-system 'clear'
-greeting
 
+# Game starts here
 loop do
-  system 'clear'
   score = { player: 0, computer: 0 }
   game = 1
   # play game - round of 5 games
-  loop do
-    board = initialize_board
-    play_game!(board)
-    system 'clear'
-
-    # update/display score
-    round_over(board, score, game)
-    game += 1
-
-    break if ultimate_winner?(score)
-  end
-
+  start_game(score, game)
   # display ultimate winner
   display_champion(score)
 
