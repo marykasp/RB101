@@ -249,6 +249,43 @@ def round_over(brd, score, game)
   display_score(score, game)
 end
 
+# PLAY GAME
+# =============================================
+def game_loop(brd, current_player)
+  loop do
+    display_board(brd)
+    # current player makes move
+    place_piece!(brd, current_player)
+    # change current player
+    current_player = alternate_player(current_player)
+    clear_screen
+    break if game_over?(brd)
+  end
+end
+
+def play_game(brd)
+  # decide current player before each game
+  current_player = decide_current_player
+  prompt "The #{current_player} will play first!"
+  enter_to_continue
+  clear_screen
+  game_loop(brd, current_player)
+end
+
+def start_match(score, game)
+  loop do
+    board = initialize_board
+    play_game(board)
+    clear_screen
+
+    # update/display score of each round
+    round_over(board, score, game)
+    game += 1
+
+    break if ultimate_winner?(score)
+  end
+end
+
 # ULTIMATE WINNER
 # =============================================
 def ultimate_winner?(score)
@@ -265,34 +302,11 @@ def display_champion(score)
   end
 end
 
-# PLAY GAME
-# =============================================
-def game_loop(brd, current_player)
-  loop do
-    display_board(brd)
-    # current player makes move
-    place_piece!(brd, current_player)
-    # change current player
-    current_player = alternate_player(current_player)
-    clear_screen
-    break if game_over?(brd)
-  end
-end
-
-def play_game!(brd)
-  # decide current player before each game
-  current_player = decide_current_player
-  prompt "The #{current_player} will play first!"
-  enter_to_continue
-  clear_screen
-  game_loop(brd, current_player)
-end
-
 def play_again?
   answer = ''
   loop do
     prompt MESSAGES['rematch']
-    answer = gets.chomp
+    answer = gets.chomp.downcase
     break if ['n', 'no', 'y', 'yes'].include?(answer)
     prompt MESSAGES['valid_choice']
   end
@@ -303,23 +317,11 @@ end
 # =========================================================
 clear_screen
 greeting
-
-# Game starts here
 loop do
   score = { player: 0, computer: 0 }
   game = 1
-  # play game - round of 5 games
-  loop do
-    board = initialize_board
-    play_game!(board)
-    system 'clear'
-
-    # update/display score
-    round_over(board, score, game)
-    game += 1
-
-    break if ultimate_winner?(score)
-  end
+  # play game - match of 5 games
+  start_match(score, game)
 
   # display ultimate winner
   display_champion(score)
