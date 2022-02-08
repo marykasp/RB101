@@ -1,6 +1,8 @@
 decide_player: "Who should go first? 1) player 2) computer 3) random"
 valid_choice: "Sorry, that is not a valid choice"
 player_winner: "Player is the ultimate winner!"
-computer_winner: "Computer is the ultimate winner! Better luck next time"
+computer_winner: "Computer is the ultimate winner!
+Better luck next time"
+tied: "The game is a tie!"
 rematch: "Rematch? (y or n)"
 goodbye: "Thanks for playing Tic Tac Toe! Good bye!"

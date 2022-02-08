@@ -1,7 +1,7 @@
 require 'yaml'
 
 # CONSTANTS
-# =========================================================
+# =============================================
 MESSAGES = YAML.load_file('tictactoe_messages.yml')
 INITIAL_MARKER = " "
 PLAYER_MARKER = 'X'
@@ -40,6 +40,12 @@ WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] + # rows
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] + # columns
                 [[1, 5, 9], [3, 5, 7]] # diagonals
 
+# PROMPT & GREETING METHODS
+# =============================================
+def clear_screen
+  system 'clear'
+end
+
 def prompt(msg)
   puts ">>>> #{msg}"
 end
@@ -59,11 +65,13 @@ def greeting
   end
 
   if answer == 'help'
-    system 'clear'
+    clear_screen
     puts RULES
   end
 end
 
+# BOARD DISPLAY
+# =============================================
 def initialize_board
   new_board = {}
   (1..9).each { |num| new_board[num] = INITIAL_MARKER }
@@ -105,6 +113,8 @@ def valid_integer?(players_choice)
   players_choice.to_s.to_i == players_choice
 end
 
+# Current Player
+# =============================================
 def decide_current_player
   loop do
     prompt "Who should go first? 1) player 2) computer 3) random"
@@ -124,6 +134,12 @@ def alternate_player(active_player)
 end
 
 # MOVES
+# =============================================
+def empty_squares(brd)
+  # returns an array of keys that have empty spaces
+  brd.keys.select { |num| brd[num] == INITIAL_MARKER }
+end
+
 def place_piece!(brd, current_player)
   if current_player == 'player'
     player_places_piece!(brd)
@@ -186,17 +202,13 @@ def computer_places_piece!(brd)
   brd[square] = COMPUTER_MARKER
 end
 
-def empty_squares(brd)
-  # returns an array of keys that have empty spaces
-  brd.keys.select { |num| brd[num] == INITIAL_MARKER }
-end
-
+# DETECT ROUND & ULTIMATE WINNER
+# =============================================
 def board_full?(brd)
   # returns a boolean value
   empty_squares(brd).empty?
 end
 
-# detect winner for each round
 def detect_winner(brd)
   WINNING_LINES.each do |line|
     if brd.values_at(*line).count(PLAYER_MARKER) == WINNING_NUMBER
@@ -216,27 +228,8 @@ def game_over?(brd)
   game_won?(brd) || board_full?(brd)
 end
 
-# PLAY GAME
-def game_loop(brd, current_player)
-  loop do
-    display_board(brd)
-    # current player makes move
-    place_piece!(brd, current_player)
-    # change current player
-    current_player = alternate_player(current_player)
-    system 'clear'
-    break if game_over?(brd)
-  end
-end
-
-def play_game!(brd)
-  current_player = decide_current_player
-  prompt "The #{current_player} will play first!"
-  enter_to_continue
-  system 'clear'
-  game_loop(brd, current_player)
-end
-
+# SCORE
+# =============================================
 def update_score(score, brd)
   if detect_winner(brd) == "Player"
     score[:player] += 1
@@ -246,12 +239,8 @@ def update_score(score, brd)
 end
 
 def display_score(score, game)
-  prompt("** Set ##{game} - Player: #{score[:player]}. "\
+  prompt("** Game ##{game} - Player: #{score[:player]}. "\
    "Computer: #{score[:computer]} **")
-end
-
-def ultimate_winner?(score)
-  score[:player] == MAX_SCORE || score[:computer] == MAX_SCORE
 end
 
 def round_over(brd, score, game)
@@ -260,14 +249,43 @@ def round_over(brd, score, game)
   display_score(score, game)
 end
 
+# ULTIMATE WINNER
+# =============================================
+def ultimate_winner?(score)
+  score[:player] == MAX_SCORE || score[:computer] == MAX_SCORE
+end
+
 def display_champion(score)
   if score[:player] == MAX_SCORE
     prompt MESSAGES['player_winner']
   elsif score[:computer] == MAX_SCORE
     prompt MESSAGES['computer_winner']
   else
-    prompt "The set is tied!"
+    prompt MESSAGES['tied']
   end
+end
+
+# PLAY GAME
+# =============================================
+def game_loop(brd, current_player)
+  loop do
+    display_board(brd)
+    # current player makes move
+    place_piece!(brd, current_player)
+    # change current player
+    current_player = alternate_player(current_player)
+    clear_screen
+    break if game_over?(brd)
+  end
+end
+
+def play_game!(brd)
+  # decide current player before each game
+  current_player = decide_current_player
+  prompt "The #{current_player} will play first!"
+  enter_to_continue
+  clear_screen
+  game_loop(brd, current_player)
 end
 
 def play_again?
@@ -283,12 +301,11 @@ end
 
 # MAIN GAME
 # =========================================================
-# Game starts here
-system 'clear'
+clear_screen
 greeting
 
+# Game starts here
 loop do
-  system 'clear'
   score = { player: 0, computer: 0 }
   game = 1
   # play game - round of 5 games
@@ -310,5 +327,5 @@ loop do
   break unless play_again?
 end
 
-system 'clear'
+clear_screen
 prompt MESSAGES['goodbye']
