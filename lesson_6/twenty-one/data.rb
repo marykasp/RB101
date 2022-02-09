@@ -1,13 +1,21 @@
+require 'pry'
 deck = {
-  spade: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ],
-  club: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ],
-  heart: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ],
-  diamond: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ]
+  spade: {suit: '♠', value: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ]},
+  club: {suit: '♣', value: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ]},
+  heart: {suit: '♥', value: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace' ]},
+  diamond: {suit: '♦', value: ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king', 'ace']}
+}
+
+CARD_SUITS = {
+  spade: '♠',
+  club: '♣',
+  heart: '♥',
+  diamond: '♦'
 }
 
 
 def prompt(msg)
-  puts "=> #{msg}"
+  puts ">>>> #{msg}"
 end
 
 def initialize_decks!(deck, player_deck, dealer_deck)
@@ -19,25 +27,27 @@ end
 
 def deal_card(deck, hand)
   face = [:spade, :club, :heart, :diamond].sample
-  value = deck[face].sample
-  hand << [face.to_s, value]
+  value = deck[face][:value].sample
+  suit = deck[face][:suit]
+  hand << [face.to_s, suit, value]
 end
 
 def display_hand(hand)
   string_arr = hand.map do |card|
-    "A #{card[1]} of #{card[0]}"
+    "A #{card[2]} of #{card[1]} #{card[0]}"
   end
-  prompt(string_arr)
+  prompt(string_arr.join(", "))
 end
+
 
 def determine_card_value(card) # pass in array of card
   value = nil
-  if ['jack', 'queen', 'king'].include?(card[1])
+  if ['jack', 'queen', 'king'].include?(card[2])
     value = 10
-  elsif card[1] == 'ace'
+  elsif card[2] == 'ace'
     value = 11
   else
-    value = card[1]
+    value = card[2]
   end
   value
 end
@@ -70,7 +80,7 @@ def player_hit_or_stay
   player_turn = nil
   loop do
     prompt "hit or stay"
-    player_turn = gets.chomp
+    player_turn = gets.chomp.downcase
     break if ['hit', 'stay'].include?(player_turn)
     prompt "Sorry, you must enter a valid choice"
   end
@@ -81,7 +91,22 @@ def busted?(hand)
   calculate_total(hand) > 21
 end
 
+def calculate_results(player, dealer, score)
+  player_total = calculate_total(player)
+  dealer_total = calculate_total(dealer)
+  if player_total <= 21 && player_total > dealer_total
+    score[:player] += 1
+  else
+    score[:dealer] += 1
+  end
+end
+
+def display_results(score)
+  prompt score[:player] > score[:dealer] ? "The player wins" : "The dealer wins"
+end
+
 def play_again?
+  # system 'clear'
   answer = nil
   loop do
     prompt "Would you like a rematch? (y or n)"
@@ -92,12 +117,14 @@ def play_again?
   ['yes', 'y'].include?(answer)
 end
 
+
 # MAIN GAME
 # ===============================================
 loop do
   prompt "Welcome to Twenty-One!"
 
   # variables
+  score = { player: 0, dealer: 0 }
   player_deck = []
   dealer_deck = []
 
@@ -106,7 +133,7 @@ loop do
 
   # display the players hand
   prompt "Dealer has #{dealer_deck[0]} and ?"
-  prompt "You have: #{player_deck[0]} and #{player_deck[1]}, for a total of #{calculate_total(player_deck)}"
+  prompt "You have: #{player_deck[0]}, and #{player_deck[1]} for a total of #{calculate_total(player_deck)}"
 
   # player turn
   loop do
@@ -130,13 +157,27 @@ loop do
   end
 
   # dealer turn
-  # prompt "Dealer's turn..."
+  prompt "Dealers turn..."
 
-  # loop do
-  #   break if
-  # end
+  # dealer hits until total is greater than 17 or busts
+  loop do
+    deal_card(deck, dealer_deck)
+    display_hand(dealer_deck)
+    display_total(dealer_deck)
+    break if calculate_total(dealer_deck) >= 17 || busted?(dealer_deck)
+  end
+
+  if busted?(dealer_deck)
+    prompt "The player wins! The dealer busted"
+    calculate_results(player_deck, dealer_deck, score)
+  else
+    calculate_results(player_deck, dealer_deck, score)
+    display_results(score)
+  end
 
   break unless play_again?
 end
+
+prompt "Thanks for playing TwentyOne!"
 
 
