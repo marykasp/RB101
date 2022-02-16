@@ -22,6 +22,17 @@ def deal_card(deck, hand)
   hand << deck.pop
 end
 
+def display_hand(hand)
+  player_hand = hand.map do |card|
+    "a #{card[1]} of #{card[0]}s"
+  end
+  puts player_hand.join(", ")
+end
+
+def player_turn(deck, hand)
+  display_hand(hand)
+end
+
 def play_again?
   answer = nil
   loop do
@@ -47,6 +58,6 @@ loop do
     deal_card(game_deck, dealer_deck)
   end
 
-  binding.pry
+  player_turn(game_deck, player_deck)
   break unless play_again? # if true start loop again
 end

@@ -278,7 +278,50 @@ puts product.fetch(:cost, 0) # fetches value at that key, if no key then returns
 # returns an array of the hash keys
 product.keys #[:title, :price]
 product.values ['FFXIV', 80.99]
+product.value?('FFXIV') # true
 
 product.each do |key, value|
   puts "#{key} #{value}"
+end
+
+# Creates a new hash, inverting keys and values from hash; that is, in the new hash, the keys from hash become values and values become keys.
+product.invert # { "FFXIV" => :title, 80.99 => 'price'}
+
+# returns a new hash containing the contents of both hashes merged - overwriting pairs in hash with duplicate keys with those from the other hash
+hash.merge(other_hash)
+
+scores = { 'player' => 22, 'opponent' => 14 }
+# creates a new hash for every pair the block evaluates to false
+scores.reject do |key, value|
+  value > 10
+end # {"opponent" => 14}
+
+scores.select { |key, value| value > 20 } # {"player" => 22}
+
+scores.sort # converts hash to a 2-D array then sorts the array
+# [["opponent", 14], ["player", 22]]
+
+scores.to_s # converts hash to an array, then array to string
+# ====== ERRORS/EXCEPTIONS HANDLING ======
+raise "This is an exception"
+
+# debug variable value
+raise products.inspect
+
+# Exception handling
+begin
+  # any exceptions here
+  0 / 1
+rescue
+  # will make this code run
+  puts "Exception"
+  do_something()
+end
+
+# Exception object
+begin
+  0/1
+rescue ZeroDivisionError => exception
+  puts exception.class.name
+  puts excpetion.message
 end
