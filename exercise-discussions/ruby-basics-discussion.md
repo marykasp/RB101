@@ -44,11 +44,14 @@ def my_value(b)
   return a
 end
 
-my_value(a + 5)
+new_value = my_value(a + 5)
 puts a
+puts new_value # => 12
 ```
 
 Prints `7` the variable `a` inside the method is not visible outside the method definition. method definitions are self contained with respect to local variables.
+
+The value `12` is passed as an argument to the method definition, inside the method a new local variable `a` is declared and assigned to the value of the argument which is `12`. The method then returns that value to where the method is called. So can save that value in a new variable and access it. The variable `a` outside the method is not affect and is still equal to `7`. 
 
 ### Exercise 4
 
@@ -60,7 +63,7 @@ def my_value(b)
 end
 
 my_value(a)
-puts a
+puts a #=> "Xy-zy"
 ```
 
 This method takes a string as an argument. Inside the method a character in the string is being selected and modified. Instead of reassigning a whole new object instead we are reassinging a character in the string. Strings are mutable - they can be modified and the method `String#[]=` is a mutating method. Since we are modifying the string referenced by `b` and `b` references the same string as `a` the result from printing `a` will show the updated string value. 
