@@ -8,6 +8,4 @@ Lessons and exercises for [Launch School's](https://www.launchschool.com) **RB10
 - [Lesson 5](./lesson_5)
 - [Lesson 6](/.lesson_6)
 - [Small problems](./small_problems)
-- [Exercise discussions](./exercise-discussions)
-  - [ruby basics](./exercise-discussions/ruby-basics-discussion.md)
 - [Ruby Cheatsheet](ruby_cheatsheet.rb)
